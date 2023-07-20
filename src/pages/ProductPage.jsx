@@ -1,42 +1,43 @@
+// pages/ProductPage.js
 
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/ProductPage.css';
 
+export default function ProductPage() {
+  const [products, setProducts] = useState([
+    { id: 1, title: 'Product 1', price: 100 },
+    { id: 2, title: 'Product 2', price: 150 },
+    // Add more product items as needed
+  ]);
 
-    const products = [
-        {
-            id: 1,
-            key: "Hammer",
-            price: 25,
-            description: "A versatile hammer for various DIY tasks."
-        },
-        {
-            id: 2,
-            key: "Screwdriver Set",
-            price: 30,
-            description: "A set of essential screwdrivers for home repairs."
-        },
-        {
-            id: 3,
-            key: "Adjustable Wrench",
-            price: 20,
-            description: "A sturdy adjustable wrench for various uses."
-        },
-       
-    ];
-    
-    export default function ProductPage() {
-        return (
-            <div className="product-container">
-                <h1>Product Page</h1>
-                {products.map((product) => (
-                    <div key={product.id}>
-                        <p>{product.id}</p>
-                        <p>{product.key}</p>
-                        <p>Price: R{product.price}</p>
-                        <p>Description: {product.description}</p>
-                    </div>
-                ))}
-            </div>
-        );
-    }
+  const [cartItems, setCartItems] = useState([]);
 
+  const addToCart = (item) => {
+    setCartItems((prevItems) => [...prevItems, item]);
+  };
 
+  const removeFromCart = (itemToRemove) => {
+    setCartItems((prevItems) =>
+      prevItems.filter((item) => item.id !== itemToRemove.id)
+    );
+  };
+
+  const cartItemsString = encodeURIComponent(JSON.stringify(cartItems));
+
+  return (
+    <div className="product-container">
+      <h1>Product Page</h1>
+      {products.map((product) => (
+        <div key={product.id} className="product-item">
+          <p>{product.title}</p>
+          <p>Price: R{product.price}</p>
+          <button onClick={() => addToCart(product)}>Add to Cart</button>
+          <Link to={`/cart?cartItems=${cartItemsString}`}>
+            <button>Go to Cart</button>
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+}
